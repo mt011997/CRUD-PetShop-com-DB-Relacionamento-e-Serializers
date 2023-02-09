@@ -15,7 +15,7 @@ class Pet(models.Model):
         max_length=20, choices=SexChoise.choices, default=SexChoise.DEFAULT
     )
     group = models.ForeignKey(
-        "groups.Group", on_delete=models.PROTECT, related_name="pets"
+        "groups.Group", on_delete=models.PROTECT, related_name="pets", null=True
     )
 
     def __repr__(self) -> str:
