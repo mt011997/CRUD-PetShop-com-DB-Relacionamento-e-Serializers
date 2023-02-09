@@ -4,9 +4,10 @@ from traits.serializer import TraitsSerializer
 
 from .models import SexChoise
 
+
 class PetSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(max_lenght=50)
+    name = serializers.CharField(max_length=50)
     age = serializers.IntegerField()
     weight = serializers.FloatField()
     sex = serializers.ChoiceField(

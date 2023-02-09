@@ -15,8 +15,14 @@ class Pet(models.Model):
         max_length=20, choices=SexChoise.choices, default=SexChoise.DEFAULT
     )
     group = models.ForeignKey(
-        "groups.Group", on_delete=models.PROTECT, related_name="pets", null=True
+        "groups.Group", on_delete=models.PROTECT,
+        related_name="pets", null=True
+    )
+
+    traits = models.ManyToManyField(
+        "traits.Trait",
+        related_name="pets"
     )
 
     def __repr__(self) -> str:
-        return f'<[{self.id}] {self.name} - {self.age}>'
+        return f"[{self.id}] - Name: {self.name} Sex: {self.sex}"
