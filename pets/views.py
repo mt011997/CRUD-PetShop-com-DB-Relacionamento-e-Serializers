@@ -10,7 +10,15 @@ class PetsView(APIView, PageNumberPagination):
 
     def get(self, request: Request):
 
-        pets = Pet.objects.all()
+        traits = request.query_params.get("trait")
+        
+        if traits:
+            pets = Pet.objects.filter(
+                traits__name=traits
+            )
+        else:
+            pets = Pet.objects.all()
+        
         result_page = self.paginate_queryset(pets, request)
 
         serializer = PetSerializer(result_page, many=True)
@@ -51,14 +59,31 @@ class PetsView(APIView, PageNumberPagination):
 
 
 class PetsDetailView(APIView):
+
     def get(self, request: Request, pet_id = int):
+
         pet = get_object_or_404(Pet, id=pet_id)
         serializer = PetSerializer(pet)
 
         return Response(serializer.data)
+        
+    def patch(self, request: Request, pet_id: int):
+
+        pet = get_object_or_404(Pet, id=pet_id)
+
+        serializer = PetSerializer(pet, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        trait_data = serializer.validated_data.pop("traits")
+        group_data = serializer.validated_data.pop("group")
+
+        for key, value in serializer.validated_data.items():
+            setattr(pet, key, value)
+        
 
 
     def delete(self, request: Request, pet_id: int):
+
         pet = get_object_or_404(Pet, id=pet_id)
         pet.delete()
 
